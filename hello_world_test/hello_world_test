@@ -1,0 +1,135 @@
+`import uvm_pkg::*;
+`include "uvm_macros.svh"
+
+class new_test extends uvm_test;
+	`uvm_component_utils(new_test)
+	
+	function new(string name="new_test",uvm_component parent);
+		super.new(name,parent);
+	endfunction
+	
+	virtual function void build_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : BUILD PHASE",UVM_LOW);
+	endfunction
+	
+	virtual function void connect_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : BUILD PHASE",UVM_LOW);
+	endfunction
+	
+	virtual function void end_of_eloboration(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : END OF ELOBORATION PHASE", UVM_LOW)
+	endfunction
+	
+	virtual function void start_of_simulation(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : START OF SIMULATION PHASE", UVM_LOW)
+	endfunction
+	
+	virtual task pre_reset_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : PRE RESET PHASE", UVM_LOW);
+	endtask
+	
+	virtual task reset_phase(uvm_phase phase);
+		phase.raise_objection(this);
+		`uvm_info("new_test", "NEW TEST : RESET PHASE started", UVM_LOW);
+		#5;
+		phase.drop_objection(this);
+		`uvm_info("new_test", "NEW TEST : RESET PHASE ended.", UVM_LOW);
+	endtask
+	
+	virtual task post_reset_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : POST RESET PHASE", UVM_LOW);
+	endtask
+	
+	virtual task pre_configure_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : PRE CONFIGURE PHASE", UVM_LOW);
+	endtask
+	
+	virtual task configure_phase(uvm_phase phase);
+		phase.raise_objection(this);
+		`uvm_info("new_test", "NEW TEST : CONFIGURE PHASE started", UVM_LOW);
+		#5;
+		phase.drop_objection(this);
+		`uvm_info("new_test", "NEW TEST : CONFIGURE PHASE ended.", UVM_LOW);
+	endtask
+	
+	virtual task post_configure_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : POST RESET PHASE", UVM_LOW);
+	endtask
+	
+	virtual task pre_main_phase(uvm_phase phase);
+		`uvm_info("new_test", "NEW TEST " PRE MAIN PHASE started.", UVM_LOW)
+	endtask
+	
+	virtual task main_phase(uvm_phase phase);
+		phase.raise_objection(this);
+		`uvm_info("new_test", "NEW TEST : MAIN PHASE started", UVM_LOW);
+		#5;
+		phase.drop_objection(this);
+		`uvm_info("new_test", "NEW TEST : MAIN PHASE ended.", UVM_LOW);
+	endtask
+	
+	virtual task post_main_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : POST RESET PHASE", UVM_LOW);
+	endtask
+	
+	virtual task pre_shutdown_phase(uvm_phase phase);
+		`uvm_info("new_test", "NEW TEST " PRE SHUTDOWN PHASE started.", UVM_LOW)
+	endtask
+	
+	virtual task shutdown_phase(uvm_phase phase);
+		phase.raise_objection(this);
+		`uvm_info("new_test", "NEW TEST : SHUTDOWN PHASE started", UVM_LOW);
+		#5;
+		phase.drop_objection(this);
+		`uvm_info("new_test", "NEW TEST : SHUTDOWN PHASE ended.", UVM_LOW);
+	endtask
+	
+	virtual task post_shutdown_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : POST SHUTDOWN PHASE", UVM_LOW);
+	endtask
+	
+	function void extract_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : EXTRACT PHASE.", UVM_LOW);
+	endfunction
+	
+	function void check_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : CHECK PHASE.", UVM_LOW);
+	endfunction
+	
+	function void report_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : REPORT PHASE.", UVM_LOW);
+	endfunction
+	
+	function void final_phase(uvm_phase phase);
+		`uvm_info("new_test","NEW TEST : REPORT PHASE.", UVM_LOW);
+	endfunction
+	
+endclass
+
+program prm_blk;
+	class hello_world_test extends new_test;
+		`uvm_component_utils(hello_world_test)
+		
+		function new(input string name="hello_world_test",uvm_component parent=null);
+			super.new(name,parent);
+		endfunction
+		
+		virtual task run_phase(uvm_phase phase);
+			`uvm_info("hello_world_test","HELLO WORLD TEST : RUN PHASE",UVM_LOW);
+			phase.raise_objection(this,"OBJECTION IS RAISED FROM hello world test run phase.");
+			#50;
+			phase.drop_objection(this,"OBJECTION IS dropped FROM hello world test run phase.");
+		endtask
+		
+		virtual function void final_phase(uvm_phase phase);
+			`uvm_info("hello_world_test","HELLO WORLD TEST : FINAL PHASE", UVM_LOW);
+			super.final_phase(phase);
+			uvm_top.print_topology();
+		endfunction
+	endclass
+	
+	
+	initial begin
+		run_test();
+	end
+endprogram
